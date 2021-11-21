@@ -49,9 +49,32 @@ export default function useTeams() {
     }
   };
 
+  const getTeamsAffiliates = async ({ teamIds = 0 } = {}) => {
+    isLoading.value = true;
+
+    try {
+      // Incorrect api
+      const { data, error } = await mlbStats.request(`${mlbStats.apiHost}teams/affiliates`, {
+        params: {
+          teamIds,
+          sportIds: '1'
+        }
+      });
+      if (error) throw error;
+      if (data?.teams.length) {
+        return data.teams.filter((t) => t.id !== parseInt(teamIds));
+      }
+    } catch (err) {
+      error.value = err;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     getTeams,
     getTeamById,
+    getTeamsAffiliates,
     teams: readonly(teams),
     teamDetail: readonly(teamDetail),
     error,

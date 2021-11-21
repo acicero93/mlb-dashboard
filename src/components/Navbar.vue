@@ -52,7 +52,6 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline';
 import { useRoute } from 'vue-router';
 
 const navigation = [
-  { name: 'Home', text: 'Home' },
   { name: 'TeamsList', text: 'Teams' },
   { name: 'VenuesList', text: 'Venues' }
 ];

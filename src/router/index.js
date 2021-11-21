@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: () => import(/* webpackChunkName: "teams-list" */ '../views/teams/TeamsList.vue'),
     meta: {
       layout: 'AppLayoutDashboard'
     }
