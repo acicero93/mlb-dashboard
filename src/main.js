@@ -3,4 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import "./index.css";
 
-createApp(App).use(router).mount("#app");
+import AppLayout from "./layouts/AppLayout";
+
+const app = createApp(App);
+
+app.use(router);
+
+app.component("AppLayout", AppLayout).mount("#app");
