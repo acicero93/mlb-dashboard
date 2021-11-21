@@ -7,14 +7,23 @@ const routes = [
     name: "Home",
     component: Home,
     meta: {
-      layout: "AppLayoutDefault",
+      layout: "AppLayoutDashboard",
     },
   },
   {
-    path: "/about",
-    name: "About",
+    path: "/teams",
+    name: "Teams",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import(/* webpackChunkName: "teams" */ "../views/Teams.vue"),
+    meta: {
+      layout: "AppLayoutDashboard",
+    },
+  },
+  {
+    path: "/venues",
+    name: "Venues",
+    component: () =>
+      import(/* webpackChunkName: "venues" */ "../views/Venues.vue"),
     meta: {
       layout: "AppLayoutDashboard",
     },

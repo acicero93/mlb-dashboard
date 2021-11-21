@@ -1,19 +1,3 @@
-<!--
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
   <div class="max-w-lg mx-auto">
     <div>
@@ -144,6 +128,8 @@
 
 <script>
 import { HeartIcon } from "@heroicons/vue/solid";
+// const MLBStatsAPI = require("mlb-stats-api");
+// const mlbStats = new MLBStatsAPI();
 
 const people = [
   {
@@ -180,6 +166,10 @@ export default {
     HeartIcon,
   },
   setup() {
+    // mlbStats.getAttendance({
+    //   params: { teamId: 111, leagueId: 103, leagueListid: 103 },
+    // });
+
     return {
       people,
     };
