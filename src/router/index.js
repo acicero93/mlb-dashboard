@@ -1,38 +1,36 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/Home.vue';
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
+    path: '/',
+    name: 'Home',
     component: Home,
     meta: {
-      layout: "AppLayoutDashboard",
-    },
+      layout: 'AppLayoutDashboard'
+    }
   },
   {
-    path: "/teams",
-    name: "Teams",
-    component: () =>
-      import(/* webpackChunkName: "teams" */ "../views/Teams.vue"),
+    path: '/teams',
+    name: 'Teams',
+    component: () => import(/* webpackChunkName: "teams" */ '../views/Teams.vue'),
     meta: {
-      layout: "AppLayoutDashboard",
-    },
+      layout: 'AppLayoutDashboard'
+    }
   },
   {
-    path: "/venues",
-    name: "Venues",
-    component: () =>
-      import(/* webpackChunkName: "venues" */ "../views/Venues.vue"),
+    path: '/venues',
+    name: 'Venues',
+    component: () => import(/* webpackChunkName: "venues" */ '../views/Venues.vue'),
     meta: {
-      layout: "AppLayoutDashboard",
-    },
-  },
+      layout: 'AppLayoutDashboard'
+    }
+  }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
+  routes
 });
 
 export default router;
