@@ -1,11 +1,11 @@
 import { ref, readonly } from 'vue';
 import mlbStats from '@/utils/db';
 
-const teams = ref([]);
-
 export default function useTeams() {
   const isLoading = ref(false);
   const error = ref(null);
+  const teams = ref([]);
+  const teamDetail = ref({});
 
   const getTeams = async ({ season = 2022 } = {}) => {
     isLoading.value = true;
@@ -28,9 +28,32 @@ export default function useTeams() {
     }
   };
 
+  const getTeamById = async ({ teamId = 0 } = {}) => {
+    isLoading.value = true;
+
+    try {
+      const { data, error } = await mlbStats.getTeam({
+        pathParams: {
+          teamId,
+          sportIds: '1'
+        }
+      });
+      if (error) throw error;
+      if (data?.teams.length) {
+        teamDetail.value = data.teams[0];
+      }
+    } catch (err) {
+      error.value = err;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     getTeams,
+    getTeamById,
     teams: readonly(teams),
+    teamDetail: readonly(teamDetail),
     error,
     isLoading
   };

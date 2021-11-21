@@ -12,16 +12,24 @@ const routes = [
   },
   {
     path: '/teams',
-    name: 'Teams',
-    component: () => import(/* webpackChunkName: "teams" */ '../views/Teams.vue'),
+    name: 'TeamsList',
+    component: () => import(/* webpackChunkName: "teams-list" */ '../views/teams/TeamsList.vue'),
+    meta: {
+      layout: 'AppLayoutDashboard'
+    }
+  },
+  {
+    path: '/teams/:id',
+    name: 'TeamsDetail',
+    component: () => import(/* webpackChunkName: "teams-detail" */ '../views/teams/TeamsDetail.vue'),
     meta: {
       layout: 'AppLayoutDashboard'
     }
   },
   {
     path: '/venues',
-    name: 'Venues',
-    component: () => import(/* webpackChunkName: "venues" */ '../views/Venues.vue'),
+    name: 'VenuesList',
+    component: () => import(/* webpackChunkName: "venues-list" */ '../views/venues/VenuesList.vue'),
     meta: {
       layout: 'AppLayoutDashboard'
     }
