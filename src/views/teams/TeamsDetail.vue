@@ -1,21 +1,15 @@
 <template>
   <div>
-    <!-- <div>
-      <h1 class="text-2xl">{{ teamDetail }}</h1>
-      <img class="w-32 h-32 flex-shrink-0 mx-auto" :src="`https://www.mlbstatic.com/team-logos/${teamDetail.id}.svg`" alt="" />
-    </div> -->
-    <!-- <h2 class="text-xl">Affiliates</h2> -->
-    <!-- <div>{{ affiliates }}</div> -->
     <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last">
       <!-- Breadcrumb -->
       <nav class="flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden" aria-label="Breadcrumb">
-        <a href="#" class="inline-flex items-center space-x-3 text-sm font-medium text-gray-900">
+        <router-link :to="{ name: 'TeamsList' }" class="inline-flex items-center space-x-3 text-sm font-medium text-gray-900">
           <ChevronLeftIcon class="-ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
-          <span>Directory</span>
-        </a>
+          <span>Teams</span>
+        </router-link>
       </nav>
 
-      <article>
+      <article v-if="teamDetail.id">
         <!-- Profile header -->
         <div>
           <div>
@@ -54,7 +48,7 @@
 
         <!-- Tabs -->
         <div class="max-w-5xl mx-auto px-4 my-3 sm:px-6 lg:px-8">
-          <TabGroup>
+          <TabGroup :defaultIndex="defaultIndex">
             <TabList class="border-b border-gray-200 -mb-px flex space-x-8">
               <Tab v-for="tab in tabs" :key="tab.name" v-slot="{ selected }" as="template">
                 <button :class="[selected ? 'border-pink-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300', 'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm']">
@@ -100,6 +94,9 @@
               <TabPanel>
                 <!-- Team Venue -->
                 TBD
+                <h1>{{ details.title }}</h1>
+                <img :src="details.thumbnail.source" alt="" />
+                <div v-html="details.extract"></div>
               </TabPanel>
             </TabPanels>
           </TabGroup>
@@ -110,16 +107,15 @@
 </template>
 
 <script>
-import useTeams from '@/composables/useTeams';
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
-import { ChevronLeftIcon, MailIcon, PhoneIcon } from '@heroicons/vue/solid';
-import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import useTeams from '@/composables/useTeams'
+import useWiki from '@/composables/useWiki'
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { ChevronLeftIcon, MailIcon, PhoneIcon } from '@heroicons/vue/solid'
+import { useRoute } from 'vue-router'
+import { onMounted, ref } from 'vue'
 
-MailIcon;
-
-const tabs = [{ name: 'Details' }, { name: 'Affiliates' }, { name: 'Venue' }];
-const descKeys = ['name', 'parentOrgName', 'firstYearOfPlay'];
+const tabs = [{ name: 'Details' }, { name: 'Affiliates' }, { name: 'Venue' }]
+const descKeys = ['name', 'parentOrgName', 'firstYearOfPlay']
 
 export default {
   components: {
@@ -133,22 +129,27 @@ export default {
     TabPanel
   },
   setup() {
-    const route = useRoute();
-    const { getTeamById, getTeamsAffiliates, teamDetail } = useTeams();
-    const affiliates = ref([]);
-
-    getTeamById({ teamId: route.params.id });
+    const route = useRoute()
+    const { getTeamById, getTeamsAffiliates, teamDetail } = useTeams()
+    const { getWikiData } = useWiki()
+    const affiliates = ref([])
+    const details = ref({})
+    const defaultIndex = ref(route.query.tab || 0)
 
     onMounted(async () => {
-      affiliates.value = await getTeamsAffiliates({ teamIds: route.params.id });
-    });
+      await getTeamById({ teamId: route.params.id })
+      affiliates.value = await getTeamsAffiliates({ teamIds: route.params.id })
+      details.value = await getWikiData(teamDetail.value.venue.name)
+    })
 
     return {
       tabs,
+      details,
       descKeys,
       affiliates,
-      teamDetail
-    };
+      teamDetail,
+      defaultIndex
+    }
   }
-};
+}
 </script>

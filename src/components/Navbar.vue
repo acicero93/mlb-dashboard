@@ -4,13 +4,9 @@
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <router-link
-              :to="{
-                name: 'Home'
-              }"
-            >
-              <img class="block lg:hidden h-8 w-auto" src="@/assets/mlb-logo.png" alt="Workflow" />
-              <img class="hidden lg:block h-8 w-auto" src="@/assets/mlb-logo.png" alt="Workflow" />
+            <router-link :to="{ name: 'Home' }">
+              <img class="block lg:hidden h-8 w-auto" src="@/assets/mlb-logo.png" alt="MLB" />
+              <img class="hidden lg:block h-8 w-auto" src="@/assets/mlb-logo.png" alt="MLB" />
             </router-link>
           </div>
           <div class="hidden sm:block sm:ml-6">
@@ -47,14 +43,14 @@
 </template>
 
 <script>
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline';
-import { useRoute } from 'vue-router';
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
+import { useRoute } from 'vue-router'
 
 const navigation = [
   { name: 'TeamsList', text: 'Teams' },
   { name: 'VenuesList', text: 'Venues' }
-];
+]
 
 export default {
   components: {
@@ -66,15 +62,15 @@ export default {
     XIcon
   },
   setup() {
-    const route = useRoute();
+    const route = useRoute()
 
     function isActive(item) {
-      return route.name.includes(item.name);
+      return route.name.includes(item.name)
     }
     return {
       navigation,
       isActive
-    };
+    }
   }
-};
+}
 </script>
