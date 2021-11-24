@@ -7,7 +7,7 @@ const formatTitle = async (title) => {
       origin: '*',
       action: 'opensearch',
       search: title,
-      limit: '1',
+      limit: '3',
       namespace: '0',
       format: 'json'
     }
@@ -28,8 +28,7 @@ export default function useWiki() {
       const {
         data: { items: images }
       } = await getWikiImages(formattedTitle)
-      console.log('content', content)
-      console.log('images', images)
+
       if (content) {
         return {
           content,

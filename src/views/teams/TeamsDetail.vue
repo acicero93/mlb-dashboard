@@ -15,39 +15,37 @@
       </nav>
 
       <article v-if="teamDetail.id">
-        <!-- Profile header -->
+        <!-- Details Header -->
         <div>
-          <div>
-            <img class="h-32 w-full object-cover lg:h-48" src="https://gray-wifr-prod.cdn.arcpublishing.com/resizer/SmLTgETHX37mcwm4eziSSFKScCY=/800x200/smart/filters:quality(70)/cloudfront-us-east-1.images.arcpublishing.com/gray/YR47QPTICFAMJKRIZ4PJLULWIY.png" alt="" />
+          <img class="h-32 w-full object-cover lg:h-48" src="@/assets/mlb-banner.png" alt="" />
+        </div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
+            <div class="flex">
+              <img class="h-24 w-24 ring-1 ring-gray-600 bg-gray-100 p-3 sm:h-32 sm:w-32 object-contain" :src="`https://www.mlbstatic.com/team-logos/${teamDetail.id}.svg`" alt="" />
+            </div>
+            <div class="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
+              <div class="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
+                <h1 class="text-2xl font-bold text-gray-900 truncate">
+                  {{ teamDetail.name }}
+                </h1>
+              </div>
+              <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                  <MailIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <span>Message</span>
+                </a>
+                <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                  <PhoneIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <span>Call</span>
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
-              <div class="flex">
-                <img class="h-24 w-24 ring-1 ring-gray-600 bg-gray-100 p-3 sm:h-32 sm:w-32 object-contain" :src="`https://www.mlbstatic.com/team-logos/${teamDetail.id}.svg`" alt="" />
-              </div>
-              <div class="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
-                <div class="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
-                  <h1 class="text-2xl font-bold text-gray-900 truncate">
-                    {{ teamDetail.name }}
-                  </h1>
-                </div>
-                <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                  <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                    <MailIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    <span>Message</span>
-                  </a>
-                  <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                    <PhoneIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    <span>Call</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
-              <h1 class="text-2xl font-bold text-gray-900 truncate">
-                {{ teamDetail.name }}
-              </h1>
-            </div>
+          <div class="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
+            <h1 class="text-2xl font-bold text-gray-900 truncate">
+              {{ teamDetail.name }}
+            </h1>
           </div>
         </div>
 
@@ -67,13 +65,7 @@
                 <template v-if="wikiTeamDetails">
                   <div class="my-4" v-html="wikiTeamDetails.content.extract_html" />
 
-                  <!-- <div class="pb-3 mb-3 border-b border-gray-200">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                      Gallery
-                    </h3>
-                  </div> -->
-
-                  <WikiGallery :images="wikiTeamDetails.images" />
+                  <WikiGallery v-if="wikiTeamDetails?.images.length" :images="wikiTeamDetails.images" />
                 </template>
                 <template v-else>Loading...</template>
               </TabPanel>
@@ -106,9 +98,9 @@
                 <template v-if="wikiVenueDetails">
                   <div class="my-4" v-html="wikiVenueDetails.content.extract_html" />
 
-                  <iframe class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=AIzaSyCeQOUe-82JVMejHaHSsI9WJH2_i7gxhgk&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
+                  <iframe v-if="hasCoords" class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=AIzaSyCeQOUe-82JVMejHaHSsI9WJH2_i7gxhgk&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
 
-                  <WikiGallery :images="wikiVenueDetails.images" />
+                  <WikiGallery v-if="wikiVenueDetails?.images.length" :images="wikiVenueDetails.images" />
                 </template>
                 <template v-else>Loading...</template>
               </TabPanel>
@@ -152,6 +144,7 @@ export default {
     const wikiVenueDetails = ref(null)
     const defaultIndex = ref(parseInt(route.query.tab) || 0)
     const latLng = computed(() => `${wikiVenueDetails.value?.content?.coordinates?.lat},${wikiVenueDetails.value?.content?.coordinates?.lon}`)
+    const hasCoords = computed(() => Boolean(wikiVenueDetails.value?.content?.coordinates?.lat && wikiVenueDetails.value?.content?.coordinates?.lon))
 
     onMounted(async () => {
       await getTeamById({ teamId: route.params.id })
@@ -164,6 +157,7 @@ export default {
     return {
       tabs,
       latLng,
+      hasCoords,
       wikiTeamDetails,
       wikiVenueDetails,
       affiliates,

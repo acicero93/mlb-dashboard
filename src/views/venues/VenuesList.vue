@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6">
+  <!-- <div class="mt-6">
     <ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
       <router-link v-for="team in teams" :key="team.id" :to="{ name: 'TeamsDetail', params: { id: team.id }, query: { tab: 2 } }">
         <li class="relative cursor-pointer">
@@ -11,13 +11,22 @@
         </li>
       </router-link>
     </ul>
-  </div>
+  </div> -->
+  <GridList>
+    <VenueItem v-for="team in teams" :key="team.id" :team="team" />
+  </GridList>
 </template>
 
 <script>
 import useTeams from '@/composables/useTeams'
+import GridList from '@/components/GridList'
+import VenueItem from '@/components/venues/VenueItem'
 
 export default {
+  components: {
+    GridList,
+    VenueItem
+  },
   setup() {
     const { getTeams, teams } = useTeams()
 
