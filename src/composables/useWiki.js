@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-const formatTitle = async (title) => {
+const formatTitles = async (title) => {
   const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
     params: {
       origin: '*',
@@ -12,7 +12,7 @@ const formatTitle = async (title) => {
       format: 'json'
     }
   })
-  return data[1][0]
+  return data[1]
 }
 
 export default function useWiki() {
@@ -23,11 +23,11 @@ export default function useWiki() {
     isLoading.value = true
 
     try {
-      const formattedTitle = await formatTitle(title)
-      const { data: content } = await getWikiContent(formattedTitle)
+      const formattedTitles = await formatTitles(title)
+      const { data: content } = await getWikiContent(formattedTitles)
       const {
         data: { items: images }
-      } = await getWikiImages(formattedTitle)
+      } = await getWikiImages(content.title)
 
       if (content) {
         return {
@@ -42,11 +42,16 @@ export default function useWiki() {
     }
   }
 
-  async function getWikiContent(title) {
-    return await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`, {
+  async function getWikiContent(titles, index = 0) {
+    return await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${titles[index]}`, {
       params: {
         origin: '*'
       }
+    }).then(res => {
+      if (res.data.type === 'disambiguation') {
+        return getWikiContent(titles, ++index)
+      }
+      return res
     })
   }
 

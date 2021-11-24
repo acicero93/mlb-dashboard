@@ -1,5 +1,5 @@
 <template>
-  <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+  <Disclosure as="nav" class="bg-gray-800" v-slot="{ open, close }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
@@ -36,7 +36,7 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <router-link :class="[isActive(item) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block px-3 py-2 rounded-md text-base font-medium']" v-for="item in navigation" :key="item.name" :to="{ name: item.name }">{{ item.text }}</router-link>
+        <router-link @click="close" :class="[isActive(item) ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block px-3 py-2 rounded-md text-base font-medium']" v-for="item in navigation" :key="item.name" :to="{ name: item.name }">{{ item.text }}</router-link>
       </div>
     </DisclosurePanel>
   </Disclosure>
