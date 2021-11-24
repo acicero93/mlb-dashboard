@@ -3,10 +3,15 @@
     <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last">
       <!-- Breadcrumb -->
       <nav class="flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden" aria-label="Breadcrumb">
-        <router-link :to="{ name: 'TeamsList' }" class="inline-flex items-center space-x-3 text-sm font-medium text-gray-900">
-          <ChevronLeftIcon class="-ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
-          <span>Teams</span>
-        </router-link>
+        <ol role="list" class="flex items-center space-x-4">
+          <li class="flex items-center">
+            <router-link :to="{ name: 'TeamsList' }" class="text-sm font-medium text-gray-500 hover:text-gray-700">Teams</router-link>
+          </li>
+          <li class="flex items-center">
+            <ChevronRightIcon class="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />
+            <a href="#" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">{{ teamDetail.name }}</a>
+          </li>
+        </ol>
       </nav>
 
       <article v-if="teamDetail.id">
@@ -27,14 +32,14 @@
                   </h1>
                 </div>
                 <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                  <button type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                  <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                     <MailIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     <span>Message</span>
-                  </button>
-                  <button type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                  </a>
+                  <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                     <PhoneIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     <span>Call</span>
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -58,45 +63,54 @@
             </TabList>
             <TabPanels class="my-4">
               <TabPanel>
-                <!-- Attributes -->
-                <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-                  <div v-for="field in descKeys" :key="field" class="sm:col-span-1">
-                    <dt class="text-sm font-medium text-gray-500 capitalize">
-                      {{ field.split(/(?=[A-Z])/).join(' ') }}
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900">
-                      {{ teamDetail[field] }}
-                    </dd>
-                  </div>
-                </dl>
+                <!-- Team Details -->
+                <template v-if="wikiTeamDetails">
+                  <div class="my-4" v-html="wikiTeamDetails.content.extract_html" />
+
+                  <!-- <div class="pb-3 mb-3 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                      Gallery
+                    </h3>
+                  </div> -->
+
+                  <WikiGallery :images="wikiTeamDetails.images" />
+                </template>
+                <template v-else>Loading...</template>
               </TabPanel>
               <TabPanel>
                 <!-- Team Affiliates -->
-                <div class="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div v-for="team in affiliates" :key="team.id" class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500">
-                    <div class="flex-shrink-0">
-                      <img class="h-10 w-10 rounded-full" :src="`https://www.mlbstatic.com/team-logos/${team.id}.svg`" alt="" />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <router-link :to="{ name: 'TeamsDetail', params: { id: team.id } }" class="focus:outline-none">
-                        <span class="absolute inset-0" aria-hidden="true" />
-                        <p class="text-sm font-medium text-gray-900">
-                          {{ team.name }}
-                        </p>
-                        <p class="text-sm text-gray-500 truncate">
-                          {{ team.league?.name }}
-                        </p>
-                      </router-link>
+                <template v-if="wikiVenueDetails">
+                  <div class="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div v-for="team in affiliates" :key="team.id" class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500">
+                      <div class="flex-shrink-0">
+                        <img class="h-10 w-10 rounded-full" :src="`https://www.mlbstatic.com/team-logos/${team.id}.svg`" alt="" />
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <router-link :to="{ name: 'TeamsDetail', params: { id: team.id } }" class="focus:outline-none">
+                          <span class="absolute inset-0" aria-hidden="true" />
+                          <p class="text-sm font-medium text-gray-900">
+                            {{ team.name }}
+                          </p>
+                          <p class="text-sm text-gray-500 truncate">
+                            {{ team.league?.name }}
+                          </p>
+                        </router-link>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </template>
+                <template v-else>Loading...</template>
               </TabPanel>
               <TabPanel>
-                <!-- Team Venue -->
-                TBD
-                <h1>{{ details.title }}</h1>
-                <img :src="details.thumbnail.source" alt="" />
-                <div v-html="details.extract"></div>
+                <!-- Venue Details -->
+                <template v-if="wikiVenueDetails">
+                  <div class="my-4" v-html="wikiVenueDetails.content.extract_html" />
+
+                  <iframe class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=AIzaSyCeQOUe-82JVMejHaHSsI9WJH2_i7gxhgk&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
+
+                  <WikiGallery :images="wikiVenueDetails.images" />
+                </template>
+                <template v-else>Loading...</template>
               </TabPanel>
             </TabPanels>
           </TabGroup>
@@ -109,43 +123,49 @@
 <script>
 import useTeams from '@/composables/useTeams'
 import useWiki from '@/composables/useWiki'
+import WikiGallery from '@/components/WikiGallery'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import { ChevronLeftIcon, MailIcon, PhoneIcon } from '@heroicons/vue/solid'
+import { MailIcon, PhoneIcon, ChevronRightIcon } from '@heroicons/vue/solid'
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 
 const tabs = [{ name: 'Details' }, { name: 'Affiliates' }, { name: 'Venue' }]
-const descKeys = ['name', 'parentOrgName', 'firstYearOfPlay']
 
 export default {
   components: {
-    ChevronLeftIcon,
+    ChevronRightIcon,
     MailIcon,
     PhoneIcon,
     TabGroup,
     TabList,
     Tab,
     TabPanels,
-    TabPanel
+    TabPanel,
+    WikiGallery
   },
   setup() {
     const route = useRoute()
     const { getTeamById, getTeamsAffiliates, teamDetail } = useTeams()
-    const { getWikiData } = useWiki()
+    const { getWikiArticle } = useWiki()
     const affiliates = ref([])
-    const details = ref({})
-    const defaultIndex = ref(route.query.tab || 0)
+    const wikiTeamDetails = ref(null)
+    const wikiVenueDetails = ref(null)
+    const defaultIndex = ref(parseInt(route.query.tab) || 0)
+    const latLng = computed(() => `${wikiVenueDetails.value?.content?.coordinates?.lat},${wikiVenueDetails.value?.content?.coordinates?.lon}`)
 
     onMounted(async () => {
       await getTeamById({ teamId: route.params.id })
+
       affiliates.value = await getTeamsAffiliates({ teamIds: route.params.id })
-      details.value = await getWikiData(teamDetail.value.venue.name)
+      wikiTeamDetails.value = await getWikiArticle(teamDetail.value.name)
+      wikiVenueDetails.value = await getWikiArticle(teamDetail.value.venue.name)
     })
 
     return {
       tabs,
-      details,
-      descKeys,
+      latLng,
+      wikiTeamDetails,
+      wikiVenueDetails,
       affiliates,
       teamDetail,
       defaultIndex

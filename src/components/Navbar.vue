@@ -65,6 +65,8 @@ export default {
     const route = useRoute()
 
     function isActive(item) {
+      console.log(route)
+      console.log(item)
       return route.name.includes(item.name)
     }
     return {

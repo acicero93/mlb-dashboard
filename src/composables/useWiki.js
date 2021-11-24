@@ -19,27 +19,22 @@ export default function useWiki() {
   const isLoading = ref(false)
   const error = ref(null)
 
-  const getWikiData = async (title) => {
+  const getWikiArticle = async (title) => {
     isLoading.value = true
 
     try {
       const formattedTitle = await formatTitle(title)
-      const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
-        params: {
-          origin: '*',
-          action: 'query',
-          formatversion: 2,
-          prop: 'pageimages|pageterms|extracts',
-          titles: formattedTitle,
-          pithumbsize: 600,
-          exintro: true,
-          explaintext: true,
-          format: 'json'
+      const { data: content } = await getWikiContent(formattedTitle)
+      const {
+        data: { items: images }
+      } = await getWikiImages(formattedTitle)
+      console.log('content', content)
+      console.log('images', images)
+      if (content) {
+        return {
+          content,
+          images
         }
-      })
-      // if (error) throw error;
-      if (data?.query?.pages?.length) {
-        return data.query.pages[0]
       }
     } catch (err) {
       error.value = err
@@ -48,8 +43,24 @@ export default function useWiki() {
     }
   }
 
+  async function getWikiContent(title) {
+    return await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`, {
+      params: {
+        origin: '*'
+      }
+    })
+  }
+
+  async function getWikiImages(title) {
+    return await axios.get(`https://en.wikipedia.org/api/rest_v1/page/media-list/${title}`, {
+      params: {
+        origin: '*'
+      }
+    })
+  }
+
   return {
-    getWikiData,
+    getWikiArticle,
     error,
     isLoading
   }
