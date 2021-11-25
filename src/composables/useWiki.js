@@ -43,16 +43,18 @@ export default function useWiki() {
   }
 
   async function getWikiContent(titles, index = 0) {
-    return await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${titles[index]}`, {
-      params: {
-        origin: '*'
-      }
-    }).then(res => {
-      if (res.data.type === 'disambiguation') {
-        return getWikiContent(titles, ++index)
-      }
-      return res
-    })
+    return await axios
+      .get(`https://en.wikipedia.org/api/rest_v1/page/summary/${titles[index]}`, {
+        params: {
+          origin: '*'
+        }
+      })
+      .then((res) => {
+        if (res.data.type === 'disambiguation') {
+          return getWikiContent(titles, ++index)
+        }
+        return res
+      })
   }
 
   async function getWikiImages(title) {

@@ -113,13 +113,13 @@
 </template>
 
 <script>
+import { onMounted, ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import { MailIcon, PhoneIcon, ChevronRightIcon } from '@heroicons/vue/solid'
 import useTeams from '@/composables/useTeams'
 import useWiki from '@/composables/useWiki'
 import WikiGallery from '@/components/WikiGallery'
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import { MailIcon, PhoneIcon, ChevronRightIcon } from '@heroicons/vue/solid'
-import { useRoute } from 'vue-router'
-import { onMounted, ref, computed } from 'vue'
 
 const tabs = [{ name: 'Details' }, { name: 'Affiliates' }, { name: 'Venue' }]
 

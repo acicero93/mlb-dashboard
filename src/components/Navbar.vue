@@ -43,9 +43,9 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-import { useRoute } from 'vue-router'
 
 const navigation = [
   { name: 'TeamsList', text: 'Teams' },

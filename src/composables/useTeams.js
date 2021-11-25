@@ -53,7 +53,6 @@ export default function useTeams() {
     isLoading.value = true
 
     try {
-      // Incorrect api
       const { data, error } = await mlbStats.request(`${mlbStats.apiHost}teams/affiliates`, {
         params: {
           teamIds,

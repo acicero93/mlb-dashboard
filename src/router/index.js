@@ -2,6 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+    path: '/:pathMatch(.*)',
+    component: () => import(/* webpackChunkName: "not-found" */ '../views/404.vue'),
+    meta: {
+      layout: 'AppLayoutDefault'
+    }
+  },
+  {
     path: '/',
     name: 'Home',
     component: () => import(/* webpackChunkName: "teams-list" */ '../views/teams/TeamsList.vue'),
