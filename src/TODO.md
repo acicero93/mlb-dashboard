@@ -1,4 +1,4 @@
-<!-- Potential homepage data -->
+<!-- Potential homepage -->
 // mlbStats.getSchedulePostseason
 // mlbStats.getSchedulePostseasonSeries
 // mlbStats.getGamePace (gets total details for season/team) sportId,teamId,season
