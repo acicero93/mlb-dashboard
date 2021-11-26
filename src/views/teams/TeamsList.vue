@@ -1,6 +1,6 @@
 <template>
   <GridList>
-    <TeamItem v-for="team in teams" :key="team.id" :team="team" />
+    <TeamItem :id="team.id" v-for="team in teams" :key="team.id" :team="team" />
   </GridList>
 </template>
 

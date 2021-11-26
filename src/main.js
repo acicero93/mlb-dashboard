@@ -11,4 +11,4 @@ app.use(router)
 
 app.component('AppLayout', AppLayout).mount('#app')
 
-// https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_100,q_auto:best/v1/people/656529/headshot/67/current
+// https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:silo:current.png/r_max/w_180,q_auto:best/v1/people/${player.person.id}/headshot/silo/current

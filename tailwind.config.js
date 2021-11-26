@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans]
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        graduate: ['Graduate', ...defaultTheme.fontFamily.sans]
       }
     }
   },
@@ -15,3 +16,5 @@ module.exports = {
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/aspect-ratio')]
 }
+
+// font-family: 'Graduate', cursive;

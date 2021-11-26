@@ -19,7 +19,7 @@
         <div>
           <img class="h-32 w-full object-cover lg:h-48" src="@/assets/mlb-banner.png" alt="" />
         </div>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
             <div class="flex">
               <img class="h-24 w-24 ring-1 ring-gray-600 bg-gray-100 p-3 sm:h-32 sm:w-32 object-contain" :src="`https://www.mlbstatic.com/team-logos/${teamDetail.id}.svg`" alt="" />
@@ -50,7 +50,7 @@
         </div>
 
         <!-- Tabs -->
-        <div class="max-w-5xl mx-auto px-4 my-3 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 my-3 sm:px-6 lg:px-8">
           <TabGroup :defaultIndex="defaultIndex">
             <TabList class="border-b border-gray-200 -mb-px flex space-x-8">
               <Tab v-for="tab in tabs" :key="tab.name" v-slot="{ selected }" as="template">
@@ -98,9 +98,17 @@
                 <template v-if="wikiVenueDetails">
                   <div class="my-4" v-html="wikiVenueDetails.content.extract_html" />
 
-                  <iframe v-if="hasCoords" class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=AIzaSyCeQOUe-82JVMejHaHSsI9WJH2_i7gxhgk&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
+                  <iframe v-if="hasCoords && !isMapsDisabled" class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=AIzaSyCeQOUe-82JVMejHaHSsI9WJH2_i7gxhgk&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
 
                   <WikiGallery v-if="wikiVenueDetails?.images.length" :images="wikiVenueDetails.images" />
+                </template>
+                <template v-else>Loading...</template>
+              </TabPanel>
+              <TabPanel>
+                <!-- Roster Details -->
+                <template v-if="roster.length">
+                  <PlayerList :players="roster" />
+                  <PlayerListCondensed :players="roster" />
                 </template>
                 <template v-else>Loading...</template>
               </TabPanel>
@@ -120,8 +128,10 @@ import { MailIcon, PhoneIcon, ChevronRightIcon } from '@heroicons/vue/solid'
 import useTeams from '@/composables/useTeams'
 import useWiki from '@/composables/useWiki'
 import WikiGallery from '@/components/WikiGallery'
+import PlayerList from '@/components/players/PlayerList'
+import PlayerListCondensed from '@/components/players/PlayerListCondensed'
 
-const tabs = [{ name: 'Details' }, { name: 'Affiliates' }, { name: 'Venue' }]
+const tabs = [{ name: 'Details' }, { name: 'Affiliates' }, { name: 'Venue' }, { name: 'Players' }]
 
 export default {
   components: {
@@ -133,23 +143,28 @@ export default {
     Tab,
     TabPanels,
     TabPanel,
-    WikiGallery
+    WikiGallery,
+    PlayerList,
+    PlayerListCondensed
   },
   setup() {
     const route = useRoute()
-    const { getTeamById, getTeamsAffiliates, teamDetail } = useTeams()
+    const { getTeamById, getTeamsAffiliates, getTeamRoster, teamDetail } = useTeams()
     const { getWikiArticle } = useWiki()
     const affiliates = ref([])
+    const roster = ref([])
     const wikiTeamDetails = ref(null)
     const wikiVenueDetails = ref(null)
     const defaultIndex = ref(parseInt(route.query.tab) || 0)
     const latLng = computed(() => `${wikiVenueDetails.value?.content?.coordinates?.lat},${wikiVenueDetails.value?.content?.coordinates?.lon}`)
     const hasCoords = computed(() => Boolean(wikiVenueDetails.value?.content?.coordinates?.lat && wikiVenueDetails.value?.content?.coordinates?.lon))
+    const isMapsDisabled = process.env.VUE_APP_GMAPS_DISABLED === 'true'
 
     onMounted(async () => {
       await getTeamById({ teamId: route.params.id })
 
       affiliates.value = await getTeamsAffiliates({ teamIds: route.params.id })
+      roster.value = await getTeamRoster({ teamId: route.params.id })
       wikiTeamDetails.value = await getWikiArticle(teamDetail.value.name)
       wikiVenueDetails.value = await getWikiArticle(teamDetail.value.venue.name)
     })
@@ -158,9 +173,11 @@ export default {
       tabs,
       latLng,
       hasCoords,
+      isMapsDisabled,
       wikiTeamDetails,
       wikiVenueDetails,
       affiliates,
+      roster,
       teamDetail,
       defaultIndex
     }

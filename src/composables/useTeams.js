@@ -70,10 +70,32 @@ export default function useTeams() {
     }
   }
 
+  const getTeamRoster = async ({ teamId = 0 } = {}) => {
+    isLoading.value = true
+
+    try {
+      const { data, error } = await mlbStats.getTeamRoster({
+        pathParams: {
+          teamId,
+          sportIds: '1'
+        }
+      })
+      if (error) throw error
+      if (data?.roster) {
+        return data.roster.sort((a, b) => (a.position.name > b.position.name ? 1 : -1))
+      }
+    } catch (err) {
+      error.value = err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     getTeams,
     getTeamById,
     getTeamsAffiliates,
+    getTeamRoster,
     teams: readonly(teams),
     teamDetail: readonly(teamDetail),
     error,
