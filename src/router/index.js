@@ -33,6 +33,14 @@ const routes = [
     }
   },
   {
+    path: '/player/:id',
+    name: 'PlayerDetail',
+    component: () => import(/* webpackChunkName: "player-detail" */ '../views/people/PlayerDetail.vue'),
+    meta: {
+      layout: 'AppLayoutDashboard'
+    }
+  },
+  {
     path: '/venues',
     name: 'VenuesList',
     component: () => import(/* webpackChunkName: "venues-list" */ '../views/venues/VenuesList.vue'),
