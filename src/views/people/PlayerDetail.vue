@@ -15,9 +15,7 @@
                 {{ player.fullName }}
               </h1>
             </div>
-            <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                1BB/T: R/R6' 0"/208 Age: 30
-            </div>
+            <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">1BB/T: R/R6' 0"/208 Age: 30</div>
           </div>
         </div>
         <div class="hidden sm:block md:hidden mt-6 min-w-0 flex-1">
@@ -26,6 +24,7 @@
           </h1>
         </div>
       </div>
+      <PlayerStatsChart v-if="player.stats" :player="player" statType="yearByYear" />
     </template>
   </div>
 </template>
@@ -34,9 +33,12 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import usePeople from '@/composables/usePeople'
+import PlayerStatsChart from '@/components/players/PlayerStatsChart'
 
 export default {
-
+  components: {
+    PlayerStatsChart
+  },
   setup() {
     const route = useRoute()
     const { getPerson } = usePeople()

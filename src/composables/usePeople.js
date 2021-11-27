@@ -14,7 +14,7 @@ export default function usePeople() {
           personId
         },
         params: {
-          hydrate: 'awards(team),stats(type=[yearByYear,yearByYearAdvanced,careerRegularSeason,careerAdvanced](team),leagueListId=mlb_hist)'
+          hydrate: 'awards(team),stats(type=[yearByYear,yearByYearAdvanced,careerRegularSeason,careerAdvanced](team))'
         }
       })
       if (error) throw error
