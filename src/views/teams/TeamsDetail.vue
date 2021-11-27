@@ -107,8 +107,8 @@
               <TabPanel>
                 <!-- Roster Details -->
                 <template v-if="roster.length">
-                  <PlayerList :players="roster" />
-                  <PlayerListCondensed :players="roster" />
+                  <PlayerList class="hidden lg:grid" :players="roster" />
+                  <PlayerListCondensed class="lg:hidden" :players="roster" />
                 </template>
                 <template v-else>Loading...</template>
               </TabPanel>
