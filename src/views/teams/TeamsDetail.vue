@@ -98,7 +98,7 @@
                 <template v-if="wikiVenueDetails">
                   <div class="my-4" v-html="wikiVenueDetails.content.extract_html" />
 
-                  <iframe v-if="hasCoords && !isMapsDisabled" class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=AIzaSyCeQOUe-82JVMejHaHSsI9WJH2_i7gxhgk&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
+                  <iframe v-if="hasCoords && !isMapsDisabled" class="w-full h-96 my-6 rounded-3xl bg-gray-100" width="450" height="250" frameborder="0" style="border: 0" :src="`https://www.google.com/maps/embed/v1/view?key=${gmapsKey}&center=${latLng}&zoom=18&maptype=satellite`" allowfullscreen> </iframe>
 
                   <WikiGallery v-if="wikiVenueDetails?.images.length" :images="wikiVenueDetails.images" />
                 </template>
@@ -159,6 +159,7 @@ export default {
     const latLng = computed(() => `${wikiVenueDetails.value?.content?.coordinates?.lat},${wikiVenueDetails.value?.content?.coordinates?.lon}`)
     const hasCoords = computed(() => Boolean(wikiVenueDetails.value?.content?.coordinates?.lat && wikiVenueDetails.value?.content?.coordinates?.lon))
     const isMapsDisabled = process.env.VUE_APP_GMAPS_DISABLED === 'true'
+    const gmapsKey = process.env.VUE_APP_GMAPS_KEY
 
     onMounted(async () => {
       await getTeamById({ teamId: route.params.id })
@@ -174,6 +175,7 @@ export default {
       latLng,
       hasCoords,
       isMapsDisabled,
+      gmapsKey,
       wikiTeamDetails,
       wikiVenueDetails,
       affiliates,
