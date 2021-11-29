@@ -1,6 +1,7 @@
 <template>
   <div class="w-full">
-    <LineChart v-bind="lineChartProps" />
+    <SectionHeading :title="stats.group.displayName" />
+    <LineChart class="h-96" v-bind="lineChartProps" />
   </div>
 </template>
 
@@ -8,6 +9,7 @@
 import { Chart, registerables } from 'chart.js'
 import { LineChart, useLineChart } from 'vue-chart-3'
 import { ref, computed, defineComponent } from 'vue'
+import SectionHeading from '@/components/SectionHeading'
 
 // BarChart
 // DoughnutChart
@@ -21,37 +23,43 @@ import { ref, computed, defineComponent } from 'vue'
 Chart.register(...registerables)
 
 export default defineComponent({
-  name: 'PlayerStatsChart',
+  name: 'StatsLineChart',
   props: {
-    player: {
+    stats: {
       type: Object,
-      require: true
-    },
-    statType: {
-      type: String,
       require: true
     }
   },
   components: {
-    LineChart
+    LineChart,
+    SectionHeading
   },
   setup(props) {
     const c = document.createElement('canvas')
     const ctx = c.getContext('2d')
-    const { splits = [] } = props.player?.stats.find((t) => t.type.displayName === props.statType)
+    // const { splits = [], group } = props.stats
+    // const group = props.stats.splits
+    // const splits = props.stats.group
     const datasets = ref([])
 
     // Keys
-    const statKeys = ['hits', 'doubles', 'singles', 'homeRuns']
+    // const statKeys = ['hits', 'doubles', 'homeRuns']
 
-    statKeys.forEach((k) => {
-      const data = splits.map((s) => s.stat[k])
+    const statKeys = {
+      pitching: ['wins', 'saves', 'era'],
+      hitting: ['hits', 'doubles', 'homeRuns'],
+      fielding: ['assists', 'chances', 'doublePlays', 'errors', 'fielding', 'games', 'gamesStarted', 'innings']
+    }
+
+    statKeys[props.stats.group.displayName].forEach((k) => {
+      const data = props.stats.splits.map((s) => s.stat[k])
+      const { grd, color } = createGradient()
 
       datasets.value.push({
         label: k,
         data: data,
-        backgroundColor: createGradient(),
-        borderColor: '#FC2525',
+        backgroundColor: grd,
+        borderColor: color,
         borderWidth: 1,
         pointBackgroundColor: 'white',
         pointBorderColor: 'black'
@@ -70,11 +78,11 @@ export default defineComponent({
       grd.addColorStop(0.5, `rgba(${color}, 0.25)`)
       grd.addColorStop(1, `rgba(${color}, 0)`)
 
-      return grd
+      return { grd, color: `rgb(${color})` }
     }
 
     const chartData = computed(() => ({
-      labels: splits.map((s) => [s.season, s.team.teamName]),
+      labels: props.stats.splits.map((s) => [s.season, s.team?.teamName || '']),
       datasets: datasets.value
     }))
 

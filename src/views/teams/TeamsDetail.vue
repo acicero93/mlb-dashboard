@@ -31,11 +31,11 @@
                 </h1>
               </div>
               <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800">
                   <MailIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                   <span>Message</span>
                 </a>
-                <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                <a href="https://github.com/acicero93" target="_blank" type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800">
                   <PhoneIcon class="-ml-1 mr-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                   <span>Call</span>
                 </a>
@@ -51,10 +51,10 @@
 
         <!-- Tabs -->
         <div class="max-w-7xl mx-auto px-4 my-3 sm:px-6 lg:px-8">
-          <TabGroup :defaultIndex="defaultIndex">
+          <TabGroup :defaultIndex="defaultIndex" @change="changedTab">
             <TabList class="border-b border-gray-200 -mb-px flex space-x-8">
               <Tab v-for="tab in tabs" :key="tab.name" v-slot="{ selected }" as="template">
-                <button :class="[selected ? 'border-pink-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300', 'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm']">
+                <button :class="[selected ? 'border-gray-800 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300', 'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm']">
                   {{ tab.name }}
                 </button>
               </Tab>
@@ -73,7 +73,7 @@
                 <!-- Team Affiliates -->
                 <template v-if="wikiVenueDetails">
                   <div class="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div v-for="team in affiliates" :key="team.id" class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500">
+                    <div v-for="team in affiliates" :key="team.id" class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-gray-800">
                       <div class="flex-shrink-0">
                         <img class="h-10 w-10 rounded-full" :src="`https://www.mlbstatic.com/team-logos/${team.id}.svg`" alt="" />
                       </div>
@@ -122,7 +122,7 @@
 
 <script>
 import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import { MailIcon, PhoneIcon, ChevronRightIcon } from '@heroicons/vue/solid'
 import useTeams from '@/composables/useTeams'
@@ -149,6 +149,7 @@ export default {
   },
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const { getTeamById, getTeamsAffiliates, getTeamRoster, teamDetail } = useTeams()
     const { getWikiArticle } = useWiki()
     const affiliates = ref([])
@@ -170,6 +171,10 @@ export default {
       wikiVenueDetails.value = await getWikiArticle(teamDetail.value.venue.name)
     })
 
+    function changedTab(index) {
+      router.push({ query: { tab: index } })
+    }
+
     return {
       tabs,
       latLng,
@@ -181,7 +186,8 @@ export default {
       affiliates,
       roster,
       teamDetail,
-      defaultIndex
+      defaultIndex,
+      changedTab
     }
   }
 }
