@@ -42,21 +42,9 @@
         </div>
 
         <!-- Stats -->
-        <RadioGroup v-model="selected" class="mt-2 flex justify-center">
-          <div class="grid grid-cols-3 gap-3">
-            <RadioGroupOption as="template" v-for="stat in stats" :key="stat.group.displayName" :value="stat.group.displayName" v-slot="{ active, checked }">
-              <div :class="[active ? 'ring-2 ring-offset-2 ring-indigo-500' : '', checked ? 'bg-indigo-600 border-transparent text-white hover:bg-indigo-700' : 'bg-white border-gray-200 text-gray-900 hover:bg-gray-50', 'border rounded-md py-3 px-3 flex items-center justify-center text-sm font-medium uppercase sm:flex-1']">
-                <RadioGroupLabel as="p">
-                  {{ stat.group.displayName }}
-                </RadioGroupLabel>
-              </div>
-            </RadioGroupOption>
-          </div>
-        </RadioGroup>
-        <StatsLineChart v-show="stat.group.displayName === selected" v-for="(stat, i) in stats" :key="i" :stats="stat" />
-
+        <PlayerStatsChart v-if="stats?.length" :stats="stats" class="mb-4" />
         <!-- Awards -->
-        <PlayerAwardList :awards="player.awards" />
+        <PlayerAwardList v-if="player?.awards?.length" :awards="player.awards" class="mb-4" />
       </div>
     </template>
   </div>
@@ -67,34 +55,27 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ChevronRightIcon } from '@heroicons/vue/solid'
 import usePeople from '@/composables/usePeople'
-import StatsLineChart from '@/components/charts/StatsLineChart'
 import PlayerAwardList from '@/components/players/PlayerAwardList'
-import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
+import PlayerStatsChart from '@/components/players/PlayerStatsChart'
 
 export default {
   components: {
     ChevronRightIcon,
     PlayerAwardList,
-    StatsLineChart,
-    RadioGroup,
-    RadioGroupLabel,
-    RadioGroupOption
+    PlayerStatsChart
   },
   setup() {
     const route = useRoute()
     const { getPerson, getPersonStats } = usePeople()
     const player = ref(null)
     const stats = ref(null)
-    const selected = ref(null)
 
     onMounted(async () => {
       player.value = await getPerson({ personId: route.params.id })
-      stats.value = await getPersonStats({ personId: route.params.id, stats: 'yearByYear', group: 'hitting,pitching,fielding' })
-      selected.value = stats.value[0].group.displayName
+      stats.value = await getPersonStats({ personId: route.params.id, statTypes: 'yearByYear', group: 'hitting,pitching,fielding' })
     })
 
     return {
-      selected,
       player,
       stats
     }

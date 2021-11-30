@@ -1,49 +1,31 @@
 <template>
   <div class="w-full">
-    <SectionHeading :title="stats.group.displayName" />
     <LineChart class="h-96" v-bind="lineChartProps" />
   </div>
 </template>
 
 <script>
+import { ref, computed, defineComponent } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { LineChart, useLineChart } from 'vue-chart-3'
-import { ref, computed, defineComponent } from 'vue'
-import SectionHeading from '@/components/SectionHeading'
-
-// BarChart
-// DoughnutChart
-// LineChart
-// PieChart
-// PolarAreaChart
-// RadarChart
-// BubbleChart
-// ScatterChart
 
 Chart.register(...registerables)
 
 export default defineComponent({
   name: 'StatsLineChart',
   props: {
-    stats: {
+    stat: {
       type: Object,
       require: true
     }
   },
   components: {
-    LineChart,
-    SectionHeading
+    LineChart
   },
   setup(props) {
     const c = document.createElement('canvas')
     const ctx = c.getContext('2d')
-    // const { splits = [], group } = props.stats
-    // const group = props.stats.splits
-    // const splits = props.stats.group
     const datasets = ref([])
-
-    // Keys
-    // const statKeys = ['hits', 'doubles', 'homeRuns']
 
     const statKeys = {
       pitching: ['wins', 'saves', 'era'],
@@ -51,8 +33,8 @@ export default defineComponent({
       fielding: ['assists', 'chances', 'doublePlays', 'errors', 'fielding', 'games', 'gamesStarted', 'innings']
     }
 
-    statKeys[props.stats.group.displayName].forEach((k) => {
-      const data = props.stats.splits.map((s) => s.stat[k])
+    statKeys[props.stat.group.displayName].forEach((k) => {
+      const data = props.stat.splits.map((s) => s.stat[k])
       const { grd, color } = createGradient()
 
       datasets.value.push({
@@ -82,7 +64,7 @@ export default defineComponent({
     }
 
     const chartData = computed(() => ({
-      labels: props.stats.splits.map((s) => [s.season, s.team?.teamName || '']),
+      labels: props.stat.splits.map((s) => [s.season, s.team?.teamName || '']),
       datasets: datasets.value
     }))
 

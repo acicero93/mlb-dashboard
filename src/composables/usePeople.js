@@ -14,9 +14,7 @@ export default function usePeople() {
           personId
         },
         params: {
-          hydrate: 'currentTeam,team,awards,stats(type=[yearByYear,yearByYearAdvanced,careerRegularSeason,careerAdvanced](team))'
-          // hydrate: 'currentTeam,team,awards(team,league),stats(type=[yearByYear,yearByYearAdvanced,careerRegularSeason,careerAdvanced,availableStats](team(league)),sportListId=1)'
-          // stats(type=[yearByYear,yearByYearAdvanced,careerRegularSeason,careerAdvanced,availableStats](team(league)),leagueListId=mlb_hist)&site=en
+          hydrate: 'currentTeam,team,awards'
         }
       })
       if (error) throw error
@@ -30,13 +28,13 @@ export default function usePeople() {
     }
   }
 
-  const getPersonStats = async ({ personId = 0, group = 'hitting', stats = 'yearByYear,career,yearByYearAdvanced,careerAdvanced' } = {}) => {
+  const getPersonStats = async ({ personId = 0, group = 'hitting', statTypes = 'yearByYear,career,yearByYearAdvanced,careerAdvanced' } = {}) => {
     isLoading.value = true
 
     try {
       const { data, error } = await mlbStats.request(`${mlbStats.apiHost}people/${personId}/stats`, {
         params: {
-          stats,
+          stats: statTypes,
           gameType: 'R',
           leagueListId: 'mlb_hist',
           group,
@@ -46,7 +44,7 @@ export default function usePeople() {
       })
       if (error) throw error
       if (data?.stats) {
-        return data.stats
+        return data.stats.filter((s) => s.splits.length > 1)
       }
     } catch (err) {
       error.value = err
