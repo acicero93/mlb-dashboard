@@ -30,7 +30,7 @@ export default defineComponent({
     const statKeys = {
       pitching: ['wins', 'saves', 'era'],
       hitting: ['hits', 'doubles', 'homeRuns'],
-      fielding: ['assists', 'chances', 'doublePlays', 'errors', 'fielding', 'games', 'gamesStarted', 'innings']
+      fielding: ['assists', 'chances', 'doublePlays', 'errors', 'fielding', 'gamesStarted']
     }
 
     statKeys[props.stat.group.displayName].forEach((k) => {

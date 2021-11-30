@@ -41,6 +41,8 @@
           </h1>
         </div>
 
+        <!-- Attributes -->
+        <PlayerAttrList v-if="player" :player="player" class="mb-4" />
         <!-- Stats -->
         <PlayerStatsChart v-if="stats?.length" :stats="stats" class="mb-4" />
         <!-- Awards -->
@@ -55,14 +57,16 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ChevronRightIcon } from '@heroicons/vue/solid'
 import usePeople from '@/composables/usePeople'
-import PlayerAwardList from '@/components/players/PlayerAwardList'
+import PlayerAttrList from '@/components/players/PlayerAttrList'
 import PlayerStatsChart from '@/components/players/PlayerStatsChart'
+import PlayerAwardList from '@/components/players/PlayerAwardList'
 
 export default {
   components: {
     ChevronRightIcon,
-    PlayerAwardList,
-    PlayerStatsChart
+    PlayerAttrList,
+    PlayerStatsChart,
+    PlayerAwardList
   },
   setup() {
     const route = useRoute()
