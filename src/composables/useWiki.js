@@ -27,7 +27,7 @@ export default function useWiki() {
       if (!formattedTitles || !formattedTitles.length) {
         throw new Error('Page not found on Wikipedia.')
       }
-      
+
       const { data: content } = await getWikiContent(formattedTitles)
       const {
         data: { items: images }

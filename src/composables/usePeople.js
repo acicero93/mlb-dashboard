@@ -44,7 +44,7 @@ export default function usePeople() {
       })
       if (error) throw error
       if (data?.stats) {
-        return data.stats.filter((s) => s.splits.length > 1)
+        return data.stats.filter((s) => s.splits.length > 1).sort((a, b) => (a.group.displayName < b.group.displayName ? 1 : -1))
       }
     } catch (err) {
       error.value = err

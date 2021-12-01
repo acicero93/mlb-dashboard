@@ -1,5 +1,8 @@
 import { ref, readonly } from 'vue'
 import mlbStats from '@/utils/db'
+import useYear from '@/composables/useYear'
+
+const { selected } = useYear()
 
 export default function useTeams() {
   const isLoading = ref(false)
@@ -7,13 +10,13 @@ export default function useTeams() {
   const teams = ref([])
   const teamDetail = ref({})
 
-  const getTeams = async ({ season = 2022 } = {}) => {
+  const getTeams = async () => {
     isLoading.value = true
 
     try {
       const { data, error } = await mlbStats.getTeams({
         params: {
-          season: season,
+          season: selected.value,
           sportIds: '1'
         }
       })
@@ -33,6 +36,9 @@ export default function useTeams() {
 
     try {
       const { data, error } = await mlbStats.getTeam({
+        params: {
+          season: selected.value
+        },
         pathParams: {
           teamId,
           sportIds: '1'
@@ -56,6 +62,7 @@ export default function useTeams() {
       const { data, error } = await mlbStats.request(`${mlbStats.apiHost}teams/affiliates`, {
         params: {
           teamIds,
+          season: selected.value,
           sportIds: '1'
         }
       })
@@ -75,6 +82,9 @@ export default function useTeams() {
 
     try {
       const { data, error } = await mlbStats.getTeamRoster({
+        params: {
+          season: selected.value
+        },
         pathParams: {
           teamId,
           sportIds: '1'
