@@ -15,12 +15,9 @@
             </div>
           </div>
         </div>
-        <div class="hidden sm:ml-6 sm:block">
+        <div class="hidd en sm:ml-6 sm:block">
           <div class="flex items-center">
-            <button type="button" class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-              <span class="sr-only">View notifications</span>
-              <BellIcon class="h-6 w-6" aria-hidden="true" />
-            </button>
+            <SeasonSwitcher class="w-28" />
           </div>
         </div>
         <div class="-mr-2 flex sm:hidden">
@@ -45,7 +42,8 @@
 <script>
 import { useRoute } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
+import { MenuIcon, XIcon } from '@heroicons/vue/outline'
+import SeasonSwitcher from '@/components/SeasonSwitcher'
 
 const navigation = [
   { name: 'TeamsList', text: 'Teams' },
@@ -57,9 +55,9 @@ export default {
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
-    BellIcon,
     MenuIcon,
-    XIcon
+    XIcon,
+    SeasonSwitcher
   },
   setup() {
     const route = useRoute()
