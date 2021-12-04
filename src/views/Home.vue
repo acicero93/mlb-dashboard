@@ -16,14 +16,14 @@ export default {
     TestBracket
   },
   setup() {
-    const { selected } = useYear()
+    const { currentYear } = useYear()
     const series = ref([])
 
     onMounted(async () => {
       console.log(mlbStats)
       const { data } = await mlbStats.getSchedulePostseasonSeries({
         params: {
-          season: selected.value,
+          season: currentYear,
           sportId: 1,
           hydrate: 'team,broadcasts(all),seriesStatus(useOverride=true),decisions,person,probablePitcher,linescore(matchup),game(content(media(epg),summary),tickets),gameId'
         }

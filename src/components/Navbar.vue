@@ -15,7 +15,7 @@
             </div>
           </div>
         </div>
-        <div class="hidd en sm:ml-6 sm:block">
+        <div v-if="!isHome" class="hidd en sm:ml-6 sm:block">
           <div class="flex items-center">
             <SeasonSwitcher class="w-28" />
           </div>
