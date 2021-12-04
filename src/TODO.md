@@ -3,7 +3,7 @@
 // mlbStats.getSchedulePostseasonSeries
 // mlbStats.getGamePace (gets total details for season/team) sportId,teamId,season
 // mlbStats.getSportsPlayers
-
+<!-- https://statsapi.mlb.com/api/v1/schedule/postseason/series?season=2021 -->
 <!-- const { data, error } = await mlbStats.getGamePace({
   params: {
     sportId: 1,
