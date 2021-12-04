@@ -1,58 +1,17 @@
 <template>
-  <div>
+  <div class="overflow-scroll md:overflow-hidden">
     <Bracket :rounds="rounds">
-      <template v-slot:player="{ player }"> {{ player.name }}</template>
+      <template v-slot:player="{ player }">
+        <img class="w-6 h-6 mr-3" :src="`https://www.mlbstatic.com/team-logos/${player.id}.svg`" alt="" />
+        {{ player.name }}
+      </template>
     </Bracket>
-
-    {{ rounds }}
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
 import Bracket from 'vue-tournament-bracket/src/Bracket.vue'
-
-const testing = [
-  //Semi finals
-  {
-    games: [
-      {
-        player1: { id: '1', name: 'Competitor 1', winner: false },
-        player2: { id: '4', name: 'Competitor 4', winner: true }
-      }
-    ]
-  },
-  {
-    games: [
-      {
-        player1: { id: '1', name: 'Competitor 1', winner: false },
-        player2: { id: '4', name: 'Competitor 4', winner: true }
-      },
-      {
-        player1: { id: '5', name: 'Competitor 5', winner: false },
-        player2: { id: '8', name: 'Competitor 8', winner: true }
-      }
-    ]
-  },
-  //Third place play off
-  {
-    games: [
-      {
-        player1: { id: '1', name: 'Competitor 1', winner: false },
-        player2: { id: '5', name: 'Competitor 5', winner: true }
-      }
-    ]
-  },
-  //Final
-  {
-    games: [
-      {
-        player1: { id: '4', name: 'Competitor 4', winner: false },
-        player2: { id: '8', name: 'Competitor 8', winner: true }
-      }
-    ]
-  }
-]
 
 export default {
   components: {
@@ -72,13 +31,9 @@ export default {
     // const order = [['ALWC'], ["ALDS 'A'", "ALDS 'B'"], ['ALCS'], ['WS'], ['NLCS'], ["NLDS 'A'", "NLDS 'B'"], ['NLWC']]
     const order = [["ALDS 'A'", "ALDS 'B'", "NLDS 'A'", "NLDS 'B'"], ['ALCS', 'NLCS'], ['WS']]
 
-
     order.forEach((types) => {
       const series = props.series.filter((s) => types.includes(s.series.id))
-      console.log('THE SERIOES', series)
-      // types.forEach(type => {
-      //   const series = props.series.filter(s => s.series.id === k)
-      // })
+
       const games = series.reverse().map((s) => {
         const game = s.games.find((s) => s.seriesStatus.isOver)
 
@@ -92,9 +47,27 @@ export default {
     })
 
     return {
-      rounds,
-      testing
+      rounds
     }
   }
 }
 </script>
+
+<style lang="scss">
+.vtb-item-players {
+  background: white;
+
+  .vtb-player {
+    width: 250px;
+    @apply text-black;
+    @apply relative rounded-lg border border-gray-300 bg-white px-3 py-3 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500;
+
+    &.winner {
+      @apply bg-green-50;
+    }
+    &.defeated {
+      @apply bg-red-50;
+    }
+  }
+}
+</style>
