@@ -1,4 +1,3 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <Listbox as="div" v-model="selected">
     <div class="mt-1 relative">

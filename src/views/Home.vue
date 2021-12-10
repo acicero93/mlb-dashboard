@@ -1,40 +1,39 @@
 <template>
   <div>
-    <!-- Hello world -->
-    <TestBracket v-if="series.length" :series="series" />
+    <h1 class="mt-4 text-center text-2xl font-bold text-gray-900 truncate">{{ currentYear }} Post Season</h1>
+
+    <div class="flex overflow-scroll lg:overflow-hidden">
+      <SeriesBracket v-if="seriesRounds.length" :rounds="seriesRounds" />
+
+      <div v-if="finalGame" class="flex flex-col flex-grow justify-center items-center ml-8">
+        <div class="w-32 p-6 mb-4 shadow-md rounded-full">
+          <img :src="`https://www.mlbstatic.com/team-logos/${finalGame.seriesStatus.winningTeam.id}.svg`" alt="" />
+        </div>
+        <div class="font-bold">{{ finalGame.seriesStatus.description }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
-import mlbStats from '@/utils/db'
 import useYear from '@/composables/useYear'
-import TestBracket from '@/components/TestBracket'
+import useSchedule from '@/composables/useSchedule'
+import SeriesBracket from '@/components/SeriesBracket'
 
 export default {
   components: {
-    TestBracket
+    SeriesBracket
   },
   setup() {
     const { currentYear } = useYear()
-    const series = ref([])
+    const { seriesRounds, finalGame, getSchedulePostseasonSeries } = useSchedule()
 
-    onMounted(async () => {
-      console.log(mlbStats)
-      const { data } = await mlbStats.getSchedulePostseasonSeries({
-        params: {
-          season: currentYear,
-          sportId: 1,
-          hydrate: 'team,broadcasts(all),seriesStatus(useOverride=true),decisions,person,probablePitcher,linescore(matchup),game(content(media(epg),summary),tickets),gameId'
-        }
-      })
-      series.value = data.series
-
-      console.log('data', data)
-    })
+    getSchedulePostseasonSeries()
 
     return {
-      series
+      currentYear,
+      seriesRounds,
+      finalGame
     }
   }
 }
