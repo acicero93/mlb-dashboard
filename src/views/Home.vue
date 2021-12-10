@@ -12,6 +12,8 @@
         <div class="font-bold">{{ finalGame.seriesStatus.description }}</div>
       </div>
     </div>
+
+    <LogoClouds />
   </div>
 </template>
 
@@ -19,10 +21,12 @@
 import useYear from '@/composables/useYear'
 import useSchedule from '@/composables/useSchedule'
 import SeriesBracket from '@/components/SeriesBracket'
+import LogoClouds from '@/components/LogoClouds'
 
 export default {
   components: {
-    SeriesBracket
+    SeriesBracket,
+    LogoClouds
   },
   setup() {
     const { currentYear } = useYear()
