@@ -15,7 +15,7 @@
             </div>
           </div>
         </div>
-        <div class="hidd en sm:ml-6 sm:block">
+        <div v-if="!isHome" class="hidd en sm:ml-6 sm:block">
           <div class="flex items-center">
             <SeasonSwitcher class="w-28" />
           </div>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { MenuIcon, XIcon } from '@heroicons/vue/outline'
@@ -65,8 +66,14 @@ export default {
     function isActive(item) {
       return route.name.includes(item.name)
     }
+
+    const isHome = computed(() => {
+      return route.name.includes('Home')
+    })
+
     return {
       navigation,
+      isHome,
       isActive
     }
   }

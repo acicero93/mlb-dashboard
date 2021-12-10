@@ -2,9 +2,8 @@ import { ref, readonly } from 'vue'
 import mlbStats from '@/utils/db'
 import useYear from '@/composables/useYear'
 
-const { selected } = useYear()
-
 export default function useTeams() {
+  const { selected } = useYear()
   const isLoading = ref(false)
   const error = ref(null)
   const teams = ref([])

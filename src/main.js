@@ -8,5 +8,4 @@ import AppLayout from './layouts/AppLayout'
 const app = createApp(App)
 
 app.use(router)
-
 app.component('AppLayout', AppLayout).mount('#app')

@@ -1,11 +1,11 @@
 import { ref } from 'vue'
 
-const now = new Date().getUTCFullYear() + 1
-const years = Array(now - (now - 20))
-  .fill('')
-  .map((_, idx) => now - idx)
-
 export default function useYear() {
+  const currentYear = new Date().getUTCFullYear()
+  const nextYear = currentYear + 1
+  const years = Array(nextYear - (nextYear - 20))
+    .fill('')
+    .map((_, idx) => nextYear - idx)
   const selected = ref(getYear() || years[0])
 
   function setYear(year) {
@@ -18,6 +18,7 @@ export default function useYear() {
 
   return {
     selected,
+    currentYear,
     years,
     setYear,
     getYear
