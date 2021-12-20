@@ -30,12 +30,12 @@ const logos = [
     src: require(`@/assets/tailwindcss.png`)
   },
   {
-    alt: 'tailwindui',
-    src: require(`@/assets/tailwindui.png`)
-  },
-  {
     alt: 'heroicons',
     src: require(`@/assets/heroicons.png`)
+  },
+  {
+    alt: 'wikipedia',
+    src: require(`@/assets/wikipedia.png`)
   }
 ]
 
