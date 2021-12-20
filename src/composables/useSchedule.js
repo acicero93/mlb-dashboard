@@ -3,7 +3,7 @@ import mlbStats from '@/utils/db'
 import useYear from '@/composables/useYear'
 
 export default function useTeams() {
-  const { currentYear } = useYear()
+  const { currentYear, years } = useYear()
   const isLoading = ref(false)
   const error = ref(null)
   const series = ref([])
@@ -18,18 +18,22 @@ export default function useTeams() {
 
       // Find games containing series decision/result
       let gamesList = seriesList
-        .map(s => s.games)
+        .map((s) => s.games)
         .flat()
-        .filter(g => g.seriesStatus.isOver)
+        .filter((g) => g.seriesStatus.isOver)
         .sort((a, b) => (a.seriesStatus.shortName > b.seriesStatus.shortName ? 1 : -1))
 
       // Remove duplicates
-      gamesList = [...gamesList.reduce((a,c)=>{
-        a.set(c.gamePk, c);
-        return a;
-      }, new Map()).values()];
+      gamesList = [
+        ...gamesList
+          .reduce((a, c) => {
+            a.set(c.gamePk, c)
+            return a
+          }, new Map())
+          .values()
+      ]
 
-      const games = gamesList.map(game => {
+      const games = gamesList.map((game) => {
         return {
           player1: { id: game.seriesStatus.winningTeam.id, name: game.seriesStatus.winningTeam.name, winner: true },
           player2: { id: game.seriesStatus.losingTeam.id, name: game.seriesStatus.losingTeam.name, winner: false }
@@ -49,23 +53,30 @@ export default function useTeams() {
     return fg
   })
 
+  const hasSeriesTypes = (s) => {
+    return s.some((e) => seriesTypes.includes(e.series.gameType))
+  }
+
   const getSchedulePostseasonSeries = async ({ season = currentYear } = {}) => {
     isLoading.value = true
 
     const prevSeason = season - 1
 
     try {
-      const { data } = await mlbStats.getSchedulePostseasonSeries({
+      const { data, error } = await mlbStats.getSchedulePostseasonSeries({
         params: {
           season,
           sportId: 1,
-          hydrate: 'team,broadcasts(all),seriesStatus(useOverride=true),decisions,person,probablePitcher,linescore(matchup),game(content(media(epg),summary),tickets),gameId'
+          hydrate: 'team,seriesStatus(useOverride=true),gameId'
         }
       })
-      if (error.value) throw error
-      if (data?.series && data?.series.length) {
+      if (error) throw error
+
+      if (data?.series && data?.series.length && hasSeriesTypes(data.series)) {
         series.value = data.series
-      } else if (!data?.series.length) {
+      } else if (prevSeason <= years[years.length - 1]) {
+        throw new Error(`Could not find data for year: ${prevSeason}`)
+      } else {
         return getSchedulePostseasonSeries({ season: prevSeason })
       }
     } catch (err) {

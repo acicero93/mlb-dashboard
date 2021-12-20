@@ -28,11 +28,12 @@ export default function useWiki() {
         throw new Error('Page not found on Wikipedia.')
       }
 
-      const { data: content } = await getWikiContent(formattedTitles)
+      const { data: content, error } = await getWikiContent(formattedTitles)
       const {
         data: { items: images }
       } = await getWikiImages(content.title)
 
+      if (error) throw error
       if (content) {
         return {
           content,
