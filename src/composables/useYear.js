@@ -2,10 +2,9 @@ import { ref } from 'vue'
 
 export default function useYear() {
   const currentYear = new Date().getUTCFullYear()
-  const nextYear = currentYear + 1
-  const years = Array(nextYear - (nextYear - 20))
+  const years = Array(currentYear - (currentYear - 20))
     .fill('')
-    .map((_, idx) => nextYear - idx)
+    .map((_, idx) => currentYear - idx)
   const selected = ref(getYear() || years[0])
 
   function setYear(year) {
